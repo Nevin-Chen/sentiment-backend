@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "build/src/app.js",
   "scripts": {
-    "build": "tsoa spec-and-routes && tsc",
+    "tsoa:routes": "tsoa routes",
+    "tsoa:spec": "tsoa spec",
+    "build": "npm run tsoa:routes && npm run tsoa:spec && tsc",
     "start": "node build/src/app.js",
     "dev": "concurrently \"npm run tsoa:watch\" \"nodemon -w src -e ts --exec ts-node src/app.ts\"",
     "tsoa:watch": "nodemon -w src/controllers -e ts --exec \"tsoa spec-and-routes\""
@@ -17,7 +19,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "pg": "^8.16.3",
-    "swagger-ui-express": "^5.0.1",
+    "swagger-ui-express": "^4.6.3",
     "tsoa": "^6.6.0"
   },
   "devDependencies": {

@@ -1,13 +1,14 @@
-import express, { Response as ExResponse, Request as ExRequest, json, urlencoded} from "express";
+import express from "express";
 import { RegisterRoutes } from "../build/routes";
 import swaggerUi from 'swagger-ui-express';
 import fs from "fs";
 import path from "path";
+
 const apiRouter = express.Router();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(json());
+app.use(express.json());
 
 RegisterRoutes(apiRouter);
 app.use('/api', apiRouter);
@@ -15,7 +16,17 @@ app.use('/api', apiRouter);
 const swaggerFilePath = path.join(process.cwd(), "build/swagger.json");
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFilePath, "utf-8"));
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+  "/docs",
+  swaggerUi.serveFiles(swaggerDocument),
+  swaggerUi.setup(swaggerDocument, {
+    customCssUrl: "https://unpkg.com/swagger-ui-dist@4/swagger-ui.css",
+    customJs: [
+      "https://unpkg.com/swagger-ui-dist@4/swagger-ui-bundle.js",
+      "https://unpkg.com/swagger-ui-dist@4/swagger-ui-standalone-preset.js"
+    ]
+  })
+);
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
