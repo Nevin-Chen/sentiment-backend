@@ -3,6 +3,9 @@ import { RegisterRoutes } from "../build/routes";
 import swaggerUi from 'swagger-ui-express';
 import fs from "fs";
 import path from "path";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const apiRouter = express.Router();
 const app = express();
