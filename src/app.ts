@@ -1,15 +1,22 @@
 import express from "express";
 import { RegisterRoutes } from "../build/routes";
-import swaggerUi from 'swagger-ui-express';
+import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
 const apiRouter = express.Router();
 const app = express();
 const PORT = process.env.PORT || 8080;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+app.use(cors({
+  origin: FRONTEND_URL,
+  credentials: true,
+}));
 
 app.use(express.json());
 
