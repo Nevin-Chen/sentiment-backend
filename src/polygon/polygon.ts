@@ -1,12 +1,12 @@
 export interface PolygonAggResult {
-  v: number; // volume
-  vw: number; // volume weighted
-  o: number; // open
-  c: number; // close
-  h: number; // high
-  l: number; // low
-  t: number; // timestamp (ms)
-  n: number; // number of transactions
+  v: number;
+  vw: number;
+  o: number;
+  c: number;
+  h: number;
+  l: number;
+  t: number;
+  n: number;
 }
 
 export interface PolygonResponse {

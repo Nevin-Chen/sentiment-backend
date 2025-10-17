@@ -8,10 +8,8 @@ export class PolygonController extends Controller {
 
   @Get('{ticker}/aggs')
   public async getAggs(
-    @Path() ticker: string,
-    @Query() from: string,
-    @Query() to: string
+    @Path() ticker: string
   ): Promise<PolygonResponse> {
-    return this.service.getAggs(ticker, from, to);
+    return this.service.getAggs(ticker);
   }
 }
