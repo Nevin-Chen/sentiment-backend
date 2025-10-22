@@ -8,6 +8,8 @@ export class GeminiService {
   private genAI = new GoogleGenerativeAI(this.apiKey);
 
   public async chat(request: ChatRequest): Promise<ChatResponse> {
+    if (!this.apiKey) throw new Error('GEMINI_API_KEY is not set');
+
     try {
       const model = this.genAI.getGenerativeModel({
         model: this.model,

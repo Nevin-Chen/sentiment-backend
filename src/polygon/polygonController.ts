@@ -1,8 +1,9 @@
-import { Controller, Get, Route, Path, Query } from 'tsoa';
+import { Controller, Get, Route, Path, Tags } from 'tsoa';
 import { PolygonService } from './polygonService';
 import { PolygonResponse } from './polygon';
 
 @Route('stocks')
+@Tags('Stocks')
 export class PolygonController extends Controller {
   private service = new PolygonService();
 
