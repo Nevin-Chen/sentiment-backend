@@ -11,7 +11,7 @@ export class FMPService {
 
     try {
       const now = new Date();
-      const from = format(subYears(new Date(), 5), 'yyyy-MM-dd');
+      const from = format(subYears(new Date(), 1), 'yyyy-MM-dd');
       const to = format(now, 'yyyy-MM-dd');
 
       const url = `${this.base_url}/historical-price-eod/full`;
