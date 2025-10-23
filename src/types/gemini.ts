@@ -6,7 +6,7 @@ export interface ChatMessage {
 }
 
 export interface ChatRequest {
-  ticker: string;
+  symbol: string;
   messages: ChatMessage[];
 }
 
