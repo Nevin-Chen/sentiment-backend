@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { ChatRequest, ChatResponse } from './gemini';
-import { generateSystemPrompt } from './prompts/systemPrompt';
+import { ChatRequest, ChatResponse } from '../types/gemini';
+import { generateSystemPrompt } from '../prompts/systemPrompt';
 
 export class GeminiService {
   private apiKey = process.env.GEMINI_API_KEY || '';
@@ -23,7 +23,7 @@ export class GeminiService {
       const chat = model.startChat({
         systemInstruction: {
           role: 'system',
-          parts: [{ text: generateSystemPrompt(request.ticker) }]
+          parts: [{ text: generateSystemPrompt(request.symbol) }]
         },
         history: contents.slice(0, -1),
       });

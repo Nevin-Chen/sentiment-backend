@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { PolygonResponse } from './polygon';
+import { PolygonResponse } from '../types/polygon';
 import { format, subYears } from 'date-fns'
+
 export class PolygonService {
   private apiKey = process.env.POLYGON_API_KEY || '';
 
@@ -10,11 +11,11 @@ export class PolygonService {
     try {
       const now = new Date();
       const to = format(now, 'yyyy-MM-dd');
-      const from = format(subYears(new Date(), 2), 'yyyy-MM-dd');
+      const from = format(subYears(new Date(), 1), 'yyyy-MM-dd');
 
-      const url = `https://api.polygon.io/v2/aggs/ticker/${encodeURIComponent(ticker)}/range/1/day/${from}/${to}`;
+      const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${from}/${to}`;
 
-      const response = await axios.get(url, {
+      const { data } = await axios.get(url, {
         params: {
           adjusted: true,
           sort: 'asc',
@@ -22,7 +23,7 @@ export class PolygonService {
         },
       });
 
-      return response.data as PolygonResponse;
+      return data;
     } catch (error) {
       console.error(error);
       throw new Error('Failed to fetch data from Polygon API');

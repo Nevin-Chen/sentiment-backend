@@ -1,6 +1,6 @@
 import { Controller, Post, Route, Body, Tags } from 'tsoa';
-import { GeminiService } from './geminiService';
-import { ChatRequest, ChatResponse } from './gemini';
+import { GeminiService } from '../services/geminiService';
+import { ChatRequest, ChatResponse } from '../types/gemini';
 
 @Route('gemini')
 @Tags('Gemini')
