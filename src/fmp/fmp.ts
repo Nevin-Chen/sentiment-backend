@@ -11,25 +11,23 @@ export interface OHLC {
   vwap: number;
 }
 
-export interface OHLCResponse {
-  data: OHLC[];
-}
+export type OHLCResponse = OHLC[];
 
 export interface CompanyProfile {
-  symbol: string;
-  marketCap: number;
-  companyName: string;
-  description: string;
-  exchange: string;
-  sector: string;
+  address: string;
   ceo: string;
+  city: string;
+  companyName: string;
+  country: string;
+  description: string;
   employees: number;
   industry: string;
-  website: string;
-  address: string;
-  country: string;
-  city: string;
-  state: string;
-  zip: string
   ipoDate: string;
+  marketCap: number;
+  sector: string;
+  state: string;
+  symbol: string;
+  exchange: string;
+  website: string;
+  zip: string
 }

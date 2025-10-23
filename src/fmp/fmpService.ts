@@ -49,10 +49,10 @@ export class FMPService {
 
       return {
         symbol: data.symbol,
-        marketCap: Number(data.mktCap),
+        marketCap: data.marketCap,
         companyName: data.companyName,
         description: data.description,
-        exchange: data.exchangeShortName,
+        exchange: data.exchange,
         sector: data.sector,
         ceo: data.ceo,
         employees: data.fullTimeEmployees,
