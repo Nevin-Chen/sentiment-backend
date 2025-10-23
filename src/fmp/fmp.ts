@@ -7,7 +7,7 @@ export interface OHLC {
   close: number;
   volume: number;
   change: number;
-  changePercentage: number;
+  changePercent: number;
   vwap: number;
 }
 
