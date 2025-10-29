@@ -1,12 +1,18 @@
 import axios from 'axios';
 import { PolygonResponse } from '../types/polygon';
 import { format, subYears } from 'date-fns'
+import { getCache, setCache } from "../services/redis";
 
 export class PolygonService {
   private apiKey = process.env.POLYGON_API_KEY || '';
 
   public async getAggs(ticker: string): Promise<PolygonResponse> {
     if (!this.apiKey) throw new Error('POLYGON_API_KEY is not set');
+
+    const cacheKey = `polygon:aggs:${ticker}`;
+    const cached = await getCache<PolygonResponse>(cacheKey);
+
+    if (cached) return cached;
 
     try {
       const now = new Date();
@@ -22,6 +28,8 @@ export class PolygonService {
           apiKey: this.apiKey,
         },
       });
+
+      await setCache(cacheKey, data, 3600);
 
       return data;
     } catch (error) {

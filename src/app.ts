@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import cors from "cors";
+import { connectRedis } from "./services/redis";
 
 dotenv.config();
 
@@ -38,6 +39,11 @@ app.use(
   })
 );
 
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+async function startServer() {
+  await connectRedis();
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}
+
+startServer();
 
 module.exports = app;
