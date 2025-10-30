@@ -61,9 +61,7 @@ export class FMPService {
 
       const data = response.data[0]
 
-      await setCache(cacheKey, data, 86400);
-
-      return {
+      const profile = {
         symbol: data.symbol,
         marketCap: data.marketCap,
         companyName: data.companyName,
@@ -81,6 +79,10 @@ export class FMPService {
         zip: data.zip,
         ipoDate: data.ipoDate
       }
+
+      await setCache(cacheKey, profile, 86400);
+
+      return profile;
     } catch (error) {
       console.error(error);
       throw new Error('Failed to fetch data from Financial Modeling Prep API');
