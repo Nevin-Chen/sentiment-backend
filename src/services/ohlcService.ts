@@ -1,15 +1,15 @@
 import { FMPService, isRetrievableByFMP } from './fmpService';
 import { MassiveService } from './massiveService';
 import { OHLCResponse, OHLC } from '../types/ohlc';
-import { MassiveResponse } from '../types/massive';
+import { MassiveOhlcResponse } from '../types/massive';
 
 export class OhlcService {
   private fmp = new FMPService();
   private massive = new MassiveService();
 
-  private normalizeMassiveData(massiveResponse: MassiveResponse): OHLC[] {
-    return massiveResponse.results.map(result => ({
-      symbol: massiveResponse.ticker,
+  private normalizeMassiveData(massiveOhlcResponse: MassiveOhlcResponse): OHLC[] {
+    return massiveOhlcResponse.results.map(result => ({
+      symbol: massiveOhlcResponse.ticker,
       date: new Date(result.t).toISOString().slice(0, 10),
       open: result.o,
       high: result.h,

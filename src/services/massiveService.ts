@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MassiveResponse } from '../types/massive';
+import { MassiveOhlcResponse, MassiveNewsResponse } from '../types/massive';
 import { format, subYears } from 'date-fns'
 import { getCache, setCache } from "./redis";
 
@@ -7,11 +7,11 @@ export class MassiveService {
   private apiKey = process.env.MASSIVE_API_KEY || '';
   private base_url = "https://api.massive.com";
 
-  public async getAggs(ticker: string): Promise<MassiveResponse> {
+  public async getAggs(ticker: string): Promise<MassiveOhlcResponse> {
     if (!this.apiKey) throw new Error('MASSIVE_API_KEY is not set');
 
     const cacheKey = `massive:aggs:${ticker}`;
-    const cached = await getCache<MassiveResponse>(cacheKey);
+    const cached = await getCache<MassiveOhlcResponse>(cacheKey);
 
     if (cached) return cached;
 
@@ -35,7 +35,35 @@ export class MassiveService {
       return data;
     } catch (error) {
       console.error(error);
-      throw new Error('Failed to fetch data from Massive API');
+      throw new Error('Failed to fetch OHLC data from the Massive API');
+    }
+  }
+
+  public async getNews(ticker: string): Promise<MassiveNewsResponse> {
+    if (!this.apiKey) throw new Error('MASSIVE_API_KEY is not set');
+
+    const cacheKey = `massive:news:${ticker}`;
+    const cached = await getCache<MassiveNewsResponse>(cacheKey);
+
+    if (cached) return cached;
+
+    try {
+      const url = `${this.base_url}/v2/reference/news`;
+
+      const { data } = await axios.get(url, {
+        params: {
+          ticker: ticker,
+          limit: 10,
+          sort:"published_utc",
+          order: 'asc',
+          apiKey: this.apiKey,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch news data from the Massive API');
     }
   }
 }
