@@ -1,5 +1,19 @@
-export type FMPOhlcResponse = FMPOhlc[]
-export type FMPProfileResponse = FMPProfile[]
+export type FMPOhlcResponse = FMPOhlc[];
+export type FMPProfileResponse = FMPProfile[];
+export type FMPArticleResponse = FMPArticles[];
+
+export interface FMPOhlc {
+  symbol: string;
+  date: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  change: number;
+  changePercent: number;
+  vwap: number;
+}
 
 export interface FMPProfile {
   symbol: string;
@@ -40,19 +54,6 @@ export interface FMPProfile {
   isFund: boolean;
 }
 
-export interface FMPOhlc {
-  symbol: string;
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-  change: number;
-  changePercent: number;
-  vwap: number;
-}
-
 export interface CompanyProfile {
   address: string;
   ceo: string;
@@ -70,4 +71,15 @@ export interface CompanyProfile {
   exchange: string;
   website: string;
   zip: string
+}
+
+export interface FMPArticles {
+  title: string;
+  date: string;
+  content: string;
+  tickers: string;
+  image: string;
+  link: string;
+  author: string;
+  site: string;
 }

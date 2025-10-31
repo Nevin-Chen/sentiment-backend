@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FMPOhlcResponse, FMPProfileResponse, CompanyProfile } from '../types/fmp';
+import { FMPOhlcResponse, FMPProfileResponse, FMPArticleResponse, CompanyProfile, FMPArticles } from '../types/fmp';
 import { OHLC } from '../types/ohlc';
 import { format, subYears } from 'date-fns';
 import { getCache, setCache } from './redis';
@@ -86,6 +86,34 @@ export class FMPService {
     } catch (error) {
       console.error(error);
       throw new Error('Failed to fetch company profile data from the Financial Modeling Prep API');
+    }
+  }
+
+  public async getArticles(): Promise<FMPArticles[]> {
+    if (!this.apikey) throw new Error('FMP_API_KEY is not set');
+
+    const cacheKey = `fmp:articles`;
+    const cached = await getCache<FMPArticles[]>(cacheKey);
+
+    if (cached) return cached;
+
+    try {
+      const url = `${this.base_url}/fmp-articles`
+
+      const { data } = await axios.get<FMPArticleResponse>(url, {
+        params: {
+          page: 0,
+          limit: 20,
+          apikey: this.apikey,
+        },
+      });
+
+      await setCache(cacheKey, data, 3600);
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch article data from the Financial Modeling Prep API');
     }
   }
 }
