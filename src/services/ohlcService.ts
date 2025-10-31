@@ -1,15 +1,15 @@
 import { FMPService, isRetrievableByFMP } from './fmpService';
-import { PolygonService } from './polygonService';
+import { MassiveService } from './massiveService';
 import { OHLCResponse, OHLC } from '../types/ohlc';
-import { PolygonResponse } from '../types/polygon';
+import { MassiveResponse } from '../types/massive';
 
 export class OhlcService {
   private fmp = new FMPService();
-  private polygon = new PolygonService();
+  private massive = new MassiveService();
 
-  private normalizePolygonData(polygonResponse: PolygonResponse): OHLC[] {
-    return polygonResponse.results.map(result => ({
-      symbol: polygonResponse.ticker,
+  private normalizeMassiveData(massiveResponse: MassiveResponse): OHLC[] {
+    return massiveResponse.results.map(result => ({
+      symbol: massiveResponse.ticker,
       date: new Date(result.t).toISOString().slice(0, 10),
       open: result.o,
       high: result.h,
@@ -27,9 +27,9 @@ export class OhlcService {
       const data = await new FMPService().getHistoricalData(symbol);
       return { data, source: 'FMP' };
     } else {
-      const rawData = await new PolygonService().getAggs(symbol);
-      const data = this.normalizePolygonData(rawData)
-      return { data, source: 'Polygon' };
+      const rawData = await new MassiveService().getAggs(symbol);
+      const data = this.normalizeMassiveData(rawData)
+      return { data, source: 'Massive' };
     }
   }
 };

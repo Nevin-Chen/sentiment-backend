@@ -13,5 +13,5 @@ export interface OHLC {
 
 export type OHLCResponse = {
   data: OHLC[];
-  source: 'FMP' | 'Polygon';
+  source: 'FMP' | 'Massive';
 }

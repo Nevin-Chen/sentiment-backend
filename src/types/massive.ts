@@ -1,4 +1,4 @@
-export interface PolygonAggResult {
+export interface MassiveAggResult {
   v: number;
   vw: number;
   o: number;
@@ -9,12 +9,12 @@ export interface PolygonAggResult {
   n: number;
 }
 
-export interface PolygonResponse {
+export interface MassiveResponse {
   ticker: string;
   queryCount: number;
   resultsCount: number;
   adjusted: boolean;
-  results: PolygonAggResult[];
+  results: MassiveAggResult[];
   status: string;
   request_id?: string;
   count?: number;
