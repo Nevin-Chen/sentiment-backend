@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CompanyProfile } from '../types/fmp';
+import { FMPOhlcResponse, FMPProfileResponse, FMPArticleResponse, CompanyProfile, FMPArticles } from '../types/fmp';
 import { OHLC } from '../types/ohlc';
 import { format, subYears } from 'date-fns';
 import { getCache, setCache } from './redis';
@@ -23,7 +23,7 @@ export class FMPService {
 
       const url = `${this.base_url}/historical-price-eod/full`;
 
-      const { data } = await axios.get(url, {
+      const { data } = await axios.get<FMPOhlcResponse>(url, {
         params: {
           symbol: symbol,
           from: from,
@@ -37,7 +37,7 @@ export class FMPService {
       return data;
     } catch (error) {
       console.error(error);
-      throw new Error('Failed to fetch data from Financial Modeling Prep API');
+      throw new Error('Failed to fetch OHLC data from the Financial Modeling Prep API');
     }
   }
 
@@ -52,40 +52,68 @@ export class FMPService {
     try {
       const url = `${this.base_url}/profile`;
 
-      const response = await axios.get(url, {
+      const { data } = await axios.get<FMPProfileResponse>(url, {
         params: {
           symbol: symbol,
           apikey: this.apikey,
         },
       });
 
-      const data = response.data[0]
+      let FmpProfile = data[0]
 
-      const profile = {
-        symbol: data.symbol,
-        marketCap: data.marketCap,
-        companyName: data.companyName,
-        description: data.description,
-        exchange: data.exchange,
-        sector: data.sector,
-        ceo: data.ceo,
-        employees: data.fullTimeEmployees,
-        industry: data.industry,
-        website: data.website,
-        address: data.address,
-        country: data.country,
-        city: data.city,
-        state: data.state,
-        zip: data.zip,
-        ipoDate: data.ipoDate
+      const companyProfile = {
+        symbol: FmpProfile.symbol,
+        marketCap: FmpProfile.marketCap,
+        companyName: FmpProfile.companyName,
+        description: FmpProfile.description,
+        exchange: FmpProfile.exchange,
+        sector: FmpProfile.sector,
+        ceo: FmpProfile.ceo,
+        employees: FmpProfile.fullTimeEmployees,
+        industry: FmpProfile.industry,
+        website: FmpProfile.website,
+        address: FmpProfile.address,
+        country: FmpProfile.country,
+        city: FmpProfile.city,
+        state: FmpProfile.state,
+        zip: FmpProfile.zip,
+        ipoDate: FmpProfile.ipoDate
       }
 
-      await setCache(cacheKey, profile, 86400);
+      await setCache(cacheKey, FmpProfile, 86400);
 
-      return profile;
+      return companyProfile;
     } catch (error) {
       console.error(error);
-      throw new Error('Failed to fetch data from Financial Modeling Prep API');
+      throw new Error('Failed to fetch company profile data from the Financial Modeling Prep API');
+    }
+  }
+
+  public async getArticles(): Promise<FMPArticles[]> {
+    if (!this.apikey) throw new Error('FMP_API_KEY is not set');
+
+    const cacheKey = `fmp:articles`;
+    const cached = await getCache<FMPArticles[]>(cacheKey);
+
+    if (cached) return cached;
+
+    try {
+      const url = `${this.base_url}/fmp-articles`
+
+      const { data } = await axios.get<FMPArticleResponse>(url, {
+        params: {
+          page: 0,
+          limit: 20,
+          apikey: this.apikey,
+        },
+      });
+
+      await setCache(cacheKey, data, 3600);
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch article data from the Financial Modeling Prep API');
     }
   }
 }
