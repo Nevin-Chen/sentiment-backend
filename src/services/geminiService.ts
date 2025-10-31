@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ChatRequest, ChatResponse } from '../types/gemini';
 import { generateSystemPrompt } from '../prompts/systemPrompt';
+import { GeminiDataPrepper } from './geminiDataPrepper';
 
 export class GeminiService {
   private apiKey = process.env.GEMINI_API_KEY || '';
@@ -20,10 +21,13 @@ export class GeminiService {
         parts: [{ text: msg.content }],
       }));
 
+      const geminiDataPrepper = new GeminiDataPrepper();
+      const hybridData = await geminiDataPrepper.prepareHybridData(request.symbol);
+
       const chat = model.startChat({
         systemInstruction: {
           role: 'system',
-          parts: [{ text: generateSystemPrompt(request.symbol) }]
+          parts: [{ text: generateSystemPrompt(request.symbol, hybridData) }]
         },
         history: contents.slice(0, -1),
       });

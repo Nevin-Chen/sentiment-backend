@@ -32,7 +32,7 @@ export class FMPService {
         },
       });
 
-      await setCache(cacheKey, data, 300);
+      await setCache(cacheKey, data, 1800);
 
       return data;
     } catch (error) {
