@@ -1,6 +1,6 @@
 export type FMPOhlcResponse = FMPOhlc[];
 export type FMPProfileResponse = FMPProfile[];
-export type FMPArticleResponse = FMPArticles[];
+export type FMPArticleResponse = FMPArticle[];
 
 export interface FMPOhlc {
   symbol: string;
@@ -73,7 +73,7 @@ export interface CompanyProfile {
   zip: string
 }
 
-export interface FMPArticles {
+export interface FMPArticle {
   title: string;
   date: string;
   content: string;
