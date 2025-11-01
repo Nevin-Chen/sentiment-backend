@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { FMPOhlcResponse, FMPProfileResponse, FMPArticleResponse, CompanyProfile, FMPArticles } from '../types/fmp';
+import { FMPOhlcResponse, FMPProfileResponse, FMPArticleResponse, CompanyProfile } from '../types/fmp';
+import { NewsArticle } from '../types/newsArticle';
 import { OHLC } from '../types/ohlc';
 import { format, subYears } from 'date-fns';
 import { getCache, setCache } from './redis';
+import { NewsArticleNormalizer } from './newsArticleNormalizer';
 
 export class FMPService {
   private apikey = process.env.FMP_API_KEY || '';
@@ -89,11 +91,11 @@ export class FMPService {
     }
   }
 
-  public async getArticles(): Promise<FMPArticles[]> {
+  public async getArticles(): Promise<NewsArticle[]> {
     if (!this.apikey) throw new Error('FMP_API_KEY is not set');
 
     const cacheKey = `fmp:articles`;
-    const cached = await getCache<FMPArticles[]>(cacheKey);
+    const cached = await getCache<NewsArticle[]>(cacheKey);
 
     if (cached) return cached;
 
@@ -108,9 +110,10 @@ export class FMPService {
         },
       });
 
-      await setCache(cacheKey, data, 3600);
+      const normalizedArticles = data.map(NewsArticleNormalizer.fromFMP);
+      await setCache(cacheKey, normalizedArticles, 3600);
 
-      return data;
+      return normalizedArticles
     } catch (error) {
       console.error(error);
       throw new Error('Failed to fetch article data from the Financial Modeling Prep API');
