@@ -9,7 +9,7 @@ export class MassiveService {
   private apiKey = process.env.MASSIVE_API_KEY || '';
   private base_url = "https://api.massive.com";
 
-  public async getAggs(ticker: string): Promise<MassiveOhlcResponse> {
+  public async getAggs(ticker: string): Promise<MassiveOhlcResponse | null> {
     if (!this.apiKey) throw new Error('MASSIVE_API_KEY is not set');
 
     const cacheKey = `massive:aggs:${ticker}`;
@@ -32,6 +32,8 @@ export class MassiveService {
         },
       });
 
+      if (data.resultsCount == 0) return null;
+
       await setCache(cacheKey, data, 3600);
 
       return data;
@@ -41,7 +43,7 @@ export class MassiveService {
     }
   }
 
-  public async getNews(ticker: string): Promise<NewsArticle[]> {
+  public async getNews(ticker: string): Promise<NewsArticle[] | null> {
     if (!this.apiKey) throw new Error('MASSIVE_API_KEY is not set');
 
     const cacheKey = `massive:news:${ticker}`;
@@ -56,11 +58,13 @@ export class MassiveService {
         params: {
           ticker: ticker.toUpperCase(),
           limit: 10,
-          sort:"published_utc",
+          sort: "published_utc",
           order: 'desc',
           apiKey: this.apiKey,
         },
       });
+
+      if (data.results.length === 0) return null;
 
       const normalizedArticles = data.results.map(NewsArticleNormalizer.fromMassive);
       await setCache(cacheKey, normalizedArticles, 3600);

@@ -1,6 +1,10 @@
 import { HybridOhlcData } from "../types/geminiDataPrepper";
 
-export const generateSystemPrompt = (symbol: string, hybridData: HybridOhlcData) => {
+export const generateSystemPrompt = (symbol: string, hybridData: HybridOhlcData | null) => {
+  if (!hybridData) {
+    throw new Error("Gemini Prompt is missing data")
+  }
+
   return `
     You are Sentibot, an AI assistant built to help users interpret market data, chart patterns, and price action using OHLC and volume data.
 

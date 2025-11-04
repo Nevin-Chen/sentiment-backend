@@ -22,12 +22,14 @@ export class OhlcService {
     }));
   }
 
-  public async getOhlcData(symbol: string): Promise<OHLCResponse> {
+  public async getOhlcData(symbol: string): Promise<OHLCResponse | null> {
     if (isRetrievableByFMP(symbol)) {
       const data = await new FMPService().getHistoricalData(symbol);
+      if (!data) return null;
       return { data, source: 'FMP' };
     } else {
       const rawData = await new MassiveService().getAggs(symbol);
+      if (!rawData) return null;
       const data = this.normalizeMassiveData(rawData)
       return { data, source: 'Massive' };
     }
