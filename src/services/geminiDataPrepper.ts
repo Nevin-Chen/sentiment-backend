@@ -66,15 +66,14 @@ export class GeminiDataPrepper {
     return result;
   }
 
-  public async prepareHybridData(symbol: string): Promise<HybridOhlcData> {
-    const { data } = await new OhlcService().getOhlcData(symbol);
-    const compressedData = this.compressOHLC(data);
+  public async prepareHybridData(symbol: string): Promise<HybridOhlcData | null> {
+    const response = await new OhlcService().getOhlcData(symbol);
+    if (!response) return null;
 
+    const compressedData = this.compressOHLC(response.data);
     const cutOffDate = this.getDateMonthsAgo(3);
-
     const olderData = compressedData.filter(d => new Date(d[0]) < cutOffDate);
     const recentData = compressedData.filter(d => new Date(d[0]) >= cutOffDate);
-
     const olderWeekly = this.aggregateWeekly(olderData);
     const recentDaily = recentData;
 

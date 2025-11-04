@@ -61,6 +61,8 @@ export class FMPService {
         },
       });
 
+      if (data.length === 0) throw Error("Invalid ticker symbol");
+
       let FmpProfile = data[0]
 
       const companyProfile = {

@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Path, Tags } from 'tsoa';
+import { Controller, Get, Route, Path, Tags, Res, TsoaResponse } from 'tsoa';
 import { OhlcService } from '../services/ohlcService';
 import { OHLCResponse } from '../types/ohlc';
 
@@ -8,7 +8,12 @@ export class OhlcController extends Controller {
   private service = new OhlcService();
 
   @Get()
-  public async getOhlc(@Path() symbol: string): Promise<OHLCResponse> {
-    return this.service.getOhlcData(symbol);
+  public async getOhlc(
+    @Path() symbol: string,
+    @Res() notFound: TsoaResponse<404, { error: string }>
+  ): Promise<OHLCResponse> {
+    const ohlcData = await this.service.getOhlcData(symbol);
+    if (!ohlcData) return notFound(404, { error: `Ticker symbol ${symbol} was not found.` });
+    return ohlcData
   }
 }
