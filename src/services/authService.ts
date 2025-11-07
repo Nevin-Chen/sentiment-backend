@@ -48,7 +48,11 @@ class AuthService {
   }
 
   static getCookieHeader(token: string) {
-    return `token=${token}; HttpOnly; Max-Age=${cookieMaxAge}; SameSite=Lax; Path=/; 'Secure;'}`;
+    const isProduction = process.env.NODE_ENV === 'production';
+    const sameSite = isProduction ? 'None' : 'Lax';
+    const secure = isProduction ? ' Secure;' : '';
+
+    return `token=${token}; HttpOnly; Max-Age=${cookieMaxAge}; SameSite=${sameSite}; Path=/${secure}`;
   }
 }
 
