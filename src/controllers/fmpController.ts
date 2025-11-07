@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Path, Tags, Res, TsoaResponse } from 'tsoa';
+import { Controller, Get, Route, Path, Tags, Res, TsoaResponse, Security } from 'tsoa';
 import { FMPService } from '../services/fmpService';
 import { CompanyProfile } from '../types/fmp';
 
@@ -8,6 +8,7 @@ export class FMPController extends Controller {
   private service = new FMPService();
 
   @Get('{symbol}/profile')
+  @Security("jwt")
   public async getProfile(
     @Path() symbol: string,
     @Res() notFound: TsoaResponse<404, { error: string }>
