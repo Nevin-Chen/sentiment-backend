@@ -1,13 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import { RegisterRoutes } from "../build/routes";
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
-import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { connectRedis } from "./services/redis";
-
-dotenv.config();
 
 const apiRouter = express.Router();
 const app = express();
@@ -19,6 +19,7 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(cookieParser());
 app.use(express.json());
 
 RegisterRoutes(apiRouter);
