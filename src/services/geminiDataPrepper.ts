@@ -18,7 +18,7 @@ export class GeminiDataPrepper {
       Number(item.high.toFixed(2)),
       Number(item.low.toFixed(2)),
       Number(item.close.toFixed(2)),
-      Math.round(item.volume / 1000)
+      Math.round(item.volume)
     ]);
 
     return compressedData;

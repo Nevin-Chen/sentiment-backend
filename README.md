@@ -1,18 +1,6 @@
 # Sentiment-backend
 
-The backend to [sentiment-frontend](https://github.com/Nevin-Chen/sentiment-frontend). This provides Gemini's model with stock data to assist users with exploring and learning technical analysis. It also provides live data such as, stock prices, news, and company info for any public company.
-
-## Technologies
-
-- [TypeScript + Swagger/OpenAPI](https://tsoa-community.github.io/docs/) (TSOA)
-- Redis
-- Docker
-- Vercel
-
-**External APIs:**  
-- [Google Gemini](https://ai.google.dev/gemini-api/docs)
-- [Massive/Polygon.io](https://massive.com/docs/rest/quickstart)
-- [FinancialModelingPrep](https://site.financialmodelingprep.com/developer/docs)
+The backend to [sentiment-frontend](https://github.com/Nevin-Chen/sentiment-frontend). The main feature wraps Gemini's model with stock data to assist users with exploring and learning technical analysis. It also provides live stock prices, news, and company info for any public company.
 
 ## Quick start
 
@@ -45,15 +33,28 @@ npm run dev
 docker compose up -d
 ```
 
-## API docs / Endpoints
-
-Once the `swagger.json` is configured and built, open `http://localhost:8080/docs` to view and test all available endpoints.
+## Documentation + API Endpoints
+[Docs](https://sentiment-backend-pi.vercel.app/docs)  
+If setting up locally, once the `swagger.json` is configured and built, it can be read from `http://localhost:8080/docs`
 
 ## Features Roadmap
 
 - Add rate limiting for APIs
 - Implement predictive forecasting service using a LLM
   - Integrate message queue for service
+
+## Technologies
+
+- [TypeScript + Swagger/OpenAPI](https://tsoa-community.github.io/docs/) (TSOA)
+- Auth0
+- Redis
+- Docker
+- Vercel
+
+**External APIs:**  
+- [Google Gemini](https://ai.google.dev/gemini-api/docs)
+- [Massive/Polygon.io](https://massive.com/docs/rest/quickstart)
+- [FinancialModelingPrep](https://site.financialmodelingprep.com/developer/docs)
 
 ## Author
 

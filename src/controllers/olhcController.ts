@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Path, Tags, Res, TsoaResponse } from 'tsoa';
+import { Controller, Get, Route, Path, Tags, Res, TsoaResponse, Security } from 'tsoa';
 import { OhlcService } from '../services/ohlcService';
 import { OHLCResponse } from '../types/ohlc';
 
@@ -8,6 +8,7 @@ export class OhlcController extends Controller {
   private service = new OhlcService();
 
   @Get()
+  @Security("jwt")
   public async getOhlc(
     @Path() symbol: string,
     @Res() notFound: TsoaResponse<404, { error: string }>

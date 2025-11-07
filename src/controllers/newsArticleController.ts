@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Path, Tags, Res, TsoaResponse } from 'tsoa';
+import { Controller, Get, Route, Path, Tags, Res, TsoaResponse, Security } from 'tsoa';
 import { FMPService } from '../services/fmpService';
 import { MassiveService } from '../services/massiveService';
 import { NewsArticleResponse } from '../types/newsArticle';
@@ -22,6 +22,7 @@ export class newsArticleController extends Controller {
   }
 
   @Get('/{ticker}/news')
+  @Security("jwt")
   public async getNews(
     @Path() ticker: string,
     @Res() notFound: TsoaResponse<404, { error: string }>
