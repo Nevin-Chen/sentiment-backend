@@ -21,10 +21,7 @@ export class AuthController extends Controller {
   @Post("logout")
   @Security("jwt")
   public async logout(@Res() res: TsoaResponse<200, any>) {
-    this.setHeader(
-      "Set-Cookie",
-      "token=; Max-Age=0; HttpOnly; Path=/; SameSite=Lax"
-    );
+    this.setHeader("Set-Cookie", AuthService.clearCookieHeader());
     this.setStatus(200);
     return { message: "Logged out" };
   }
