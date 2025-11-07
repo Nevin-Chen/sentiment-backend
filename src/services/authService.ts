@@ -1,9 +1,6 @@
 import jwt from "jsonwebtoken";
+import { authConfig } from '../configs/auth';
 const { v4: uuidv4 } = require('uuid');
-
-const jwtSecret = process.env.JWT_SECRET;
-const jwtExpiresIn = "24h"
-const cookieMaxAge = 24 * 60 * 60;
 
 export interface AuthPayload {
   id: string;
@@ -13,16 +10,16 @@ export interface AuthPayload {
 }
 
 class AuthService {
-  static generateToken(payload: AuthPayload): string {
-    if (!jwtSecret) throw new Error('JWT_SECRET is not set');
+  private static isProd = process.env.NODE_ENV === 'production';
 
-    return jwt.sign(payload, jwtSecret, { expiresIn: jwtExpiresIn });
+  static generateToken(payload: any): string {
+    return jwt.sign(payload, authConfig.jwtSecret, {
+      expiresIn: authConfig.jwtExpiresIn,
+    });
   }
 
   static verifyToken(token: string): AuthPayload {
-    if (!jwtSecret) throw new Error('JWT_SECRET is not set');
-
-    return jwt.verify(token, jwtSecret) as AuthPayload;
+    return jwt.verify(token, authConfig.jwtSecret) as AuthPayload;
   }
 
   static verifyAuth0Token(token: string): any {
@@ -48,7 +45,15 @@ class AuthService {
   }
 
   static getCookieHeader(token: string) {
-    return `token=${token}; HttpOnly; Max-Age=${cookieMaxAge}; SameSite=Lax; Path=/; 'Secure;'}`;
+    const options = authConfig.getCookieOptions();
+    const secure = options.secure ? ' Secure;' : '';
+    return `token=${token}; HttpOnly;${secure} Max-Age=${options.maxAge}; SameSite=${options.sameSite}; Path=${options.path}`;
+  }
+
+  static clearCookieHeader() {
+    const options = authConfig.getCookieOptions();
+    const secure = options.secure ? ' Secure;' : '';
+    return `token=; Max-Age=0; HttpOnly;${secure} Path=${options.path}; SameSite=${options.sameSite}`;
   }
 }
 
